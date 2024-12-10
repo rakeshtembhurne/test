@@ -1,0 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  USER
+}
+
+enum AuctionType {
+  SINGLE
+  JODI
+  PATTI
+  OPEN
+  CLOSE
+  SINGLE_PATTI
+  DOUBLE_PATTI
+  TRIPLE_PATTI
+  CYCLE_PATTI
+  FARAK
+  BERIJ
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+  createdAt         DateTime @default(now()) @map(name: "created_at")
+  updatedAt         DateTime @default(now()) @map(name: "updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map(name: "accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map(name: "sessions")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  role          UserRole  @default(USER)
+
+  accounts  Account[]
+  sessions  Session[]
+  players   Auction[] @relation(name: "UserAuctionPlayer")
+  approvers Auction[] @relation(name: "UserAuctionApprover")
+
+  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?   @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+
+  @@map(name: "users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map(name: "verification_tokens")
+}
+
+model Chart {
+  id            String  @id @default(cuid())
+  title         String  @unique
+  score         String
+  jodiChartUrl  String?
+  panelChartUrl String?
+  startTime     String?
+  endTime       String?
+
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @default(now()) @map(name: "updated_at")
+  Auction   Auction[]
+
+  @@map(name: "charts")
+}
+
+model Result {
+  id           String   @id @default(cuid())
+  chartId      String
+  date         DateTime
+  score        String
+  openNumbers  String
+  closeNumbers String
+  sum          String
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  @@unique([chartId, date])
+  @@map(name: "results")
+}
+
+model Auction {
+  id             String      @id @default(cuid())
+  date           DateTime
+  auctionType    AuctionType
+  amount         Int
+  approved       Boolean     @default(false)
+  expectedResult Int         @default(-1)
+
+  player     User    @relation(name: "UserAuctionPlayer", fields: [userId], references: [id])
+  userId     String
+  approver   User?   @relation(name: "UserAuctionApprover", fields: [approverId], references: [id])
+  approverId String?
+
+  chart   Chart  @relation(fields: [chartId], references: [id])
+  chartId String
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  // @@unique([chartId, userId, date])
+  @@map(name: "auctions")
+}
