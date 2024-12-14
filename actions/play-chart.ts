@@ -14,8 +14,10 @@ export type FormData = {
   amount: number;
   auctionType: AuctionType;
   chartId: string;
+  expectedResult: number;
 };
 
+// TODO: implement tokens balance
 export async function playChart(userId: string, data: FormData) {
   try {
     console.log({ userId, data });
@@ -25,15 +27,17 @@ export async function playChart(userId: string, data: FormData) {
       throw new Error("Unauthorized");
     }
 
-    const { chartId, amount, auctionType } = auctionSchema.parse(data);
+    const { chartId, amount, auctionType, expectedResult } =
+      auctionSchema.parse(data);
     const date = moment().tz(TIMEZONE).startOf("day").toDate();
 
     await prisma.auction.create({
       data: {
-        amount: amount,
-        chartId: chartId,
-        date: date,
-        auctionType: auctionType,
+        amount,
+        chartId,
+        date,
+        auctionType,
+        expectedResult,
         userId: session.user.id,
       },
     });
@@ -45,4 +49,3 @@ export async function playChart(userId: string, data: FormData) {
     return { status: "error", message: error.message };
   }
 }
-

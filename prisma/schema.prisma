@@ -18,17 +18,25 @@ enum UserRole {
 }
 
 enum AuctionType {
-  SINGLE
-  JODI
-  PATTI
+  //SINGLE
+  //JODI
+  //PATTI
   OPEN
+  OPEN_SINGLE_PATTI
+  OPEN_DOUBLE_PATTI
+
   CLOSE
-  SINGLE_PATTI
-  DOUBLE_PATTI
-  TRIPLE_PATTI
-  CYCLE_PATTI
-  FARAK
-  BERIJ
+  CLOSE_SINGLE_PATTI
+  CLOSE_DOUBLE_PATTI
+  //TRIPLE_PATTI
+  //CYCLE_PATTI
+  //FARAK
+  //BERIJ
+}
+
+enum PointTransactionType {
+  DEPOSIT
+  WITHDRAW
 }
 
 model Account {
@@ -76,10 +84,13 @@ model User {
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
   role          UserRole  @default(USER)
 
-  accounts  Account[]
-  sessions  Session[]
-  players   Auction[] @relation(name: "UserAuctionPlayer")
-  approvers Auction[] @relation(name: "UserAuctionApprover")
+  accounts         Account[]
+  sessions         Session[]
+  points           Point[]
+  pointHistories   PointHistory[] @relation(name: "UserPointHistory")
+  pointApprovers   PointHistory[] @relation(name: "UserPointApprover")
+  auctionPlayers   Auction[]      @relation(name: "UserAuctionPlayer")
+  auctionApprovers Auction[]      @relation(name: "UserAuctionApprover")
 
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
@@ -149,6 +160,36 @@ model Auction {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
 
-  // @@unique([chartId, userId, date])
+  // @@unique([userId, chartId, auctionType, date])
   @@map(name: "auctions")
+}
+
+model Point {
+  id            String @id @default(cuid())
+  currentPoints Int    @default(0)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "points")
+}
+
+model PointHistory {
+  id                     String @id @default(cuid())
+  previousPoints         Int
+  afterTransactionPoints Int
+  points                 Int
+
+  userId     String
+  approverId String
+  user       User   @relation(name: "UserPointHistory", fields: [userId], references: [id])
+  approver   User   @relation(name: "UserPointApprover", fields: [approverId], references: [id])
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "pointhistories")
 }

@@ -1,26 +1,25 @@
+import { Inter as FontSans, Urbanist } from "next/font/google";
 import localFont from "next/font/local";
 
-// import { Inter as FontSans, Urbanist } from "next/font/google";
+export const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
-// export const fontSans = FontSans({
-//   subsets: ["latin"],
-//   variable: "--font-sans",
-// })
+export const fontUrban = Urbanist({
+  subsets: ["latin"],
+  variable: "--font-urban",
+});
+
+// export const fontSans = localFont({
+//   src: "./CalSans-SemiBold.woff2",
+//   variable: "--font-heading",
+// });
 //
-// export const fontUrban = Urbanist({
-//   subsets: ["latin"],
-//   variable: "--font-urban",
-// })
-
-export const fontSans = localFont({
-  src: "./CalSans-SemiBold.woff2",
-  variable: "--font-heading",
-});
-
-export const fontUrban = localFont({
-  src: "./GeistVF.woff2",
-  variable: "--font-geist",
-});
+// export const fontUrban = localFont({
+//   src: "./GeistVF.woff2",
+//   variable: "--font-geist",
+// });
 
 export const fontHeading = localFont({
   src: "./CalSans-SemiBold.woff2",
