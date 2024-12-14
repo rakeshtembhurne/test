@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { LoginSchema } from "@/lib/validations/auth";
+import { z } from "zod";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();

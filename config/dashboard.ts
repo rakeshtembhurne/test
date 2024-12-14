@@ -12,6 +12,18 @@ export const sidebarLinks: SidebarNavItem[] = [
         title: "Admin Panel",
         authorizeOnly: UserRole.ADMIN,
       },
+      {
+        href: "/manager",
+        icon: "laptop",
+        title: "Manager Panel",
+        authorizeOnly: UserRole.MANAGER,
+      },
+      {
+        href: "/manager/users",
+        icon: "users",
+        title: "Users",
+        authorizeOnly: UserRole.MANAGER,
+      },
       { href: "/dashboard", icon: "dashboard", title: "Dashboard" },
       // {
       //   href: "/dashboard/billing",

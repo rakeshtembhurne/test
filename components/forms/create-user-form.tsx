@@ -9,8 +9,10 @@ import { toast } from "sonner";
 import * as z from "zod";
 
 import { CreateUserSchema } from "@/lib/validations/user";
-
-export const CreateUserForm = () => {
+interface CreateUserFormProps {
+  hideRole?: boolean;  // This prop controls whether the Role dropdown is visible
+}
+export const CreateUserForm = ({ hideRole = false }: CreateUserFormProps) => {
   const [isPending, setIsPending] = useState(false);
 
   const form = useForm({
@@ -92,23 +94,26 @@ export const CreateUserForm = () => {
           )}
         </div>
 
-        <div>
-          <label htmlFor="role" className="block text-sm font-medium">
-            Role
-          </label>
-          <select
-            {...form.register("role")}
-            className="mt-1 block w-full rounded-md border p-2"
-          >
-            <option value={UserRole.USER}>User</option>
-            <option value={UserRole.MANAGER}>Manager</option>
-          </select>
-          {form.formState.errors.role && (
-            <p className="text-sm text-red-500">
-              {form.formState.errors.role.message}
-            </p>
-          )}
-        </div>
+        {!hideRole && (
+          <div>
+            <label htmlFor="role" className="block text-sm font-medium">
+              Role
+            </label>
+            <select
+              {...form.register("role")}
+              className="mt-1 block w-full rounded-md border p-2"
+            >
+              <option value={UserRole.USER}>User</option>
+              <option value={UserRole.MANAGER}>Manager</option>
+            </select>
+            {form.formState.errors.role && (
+              <p className="text-sm text-red-500">
+                {form.formState.errors.role.message}
+              </p>
+            )}
+          </div>
+        )}
+
       </div>
 
       <button
