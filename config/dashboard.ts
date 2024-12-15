@@ -28,7 +28,13 @@ export const sidebarLinks: SidebarNavItem[] = [
       {
         href: "/games",
         icon: "game",
-        title: "My Games",
+        title: "Games",
+        authorizeOnly: UserRole.USER,
+      },
+      {
+        href: "/points",
+        icon: "points",
+        title: "Points",
         authorizeOnly: UserRole.USER,
       },
       {
