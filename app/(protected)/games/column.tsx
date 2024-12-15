@@ -30,10 +30,13 @@ export const columns: ColumnDef<Auction>[] = [
     accessorKey: "chart.title",
     header: "Chart",
   },
-
   {
     accessorKey: "auctionType",
     header: "Game Type",
+  },
+  {
+    accessorKey: "expectedResult",
+    header: "Expected Result",
   },
   {
     accessorKey: "amount",
