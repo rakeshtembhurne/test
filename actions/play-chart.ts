@@ -2,10 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
-import { type AuctionType } from "@prisma/client";
+import type { AuctionType } from "@prisma/client";
+import { PointTransactionType } from "@prisma/client";
 import moment from "moment-timezone";
 
 import { prisma } from "@/lib/db";
+import { updateUserPoints } from "@/lib/point";
 import { auctionSchema } from "@/lib/validations/chart";
 
 const TIMEZONE = "Asia/Kolkata";
@@ -17,10 +19,8 @@ export type FormData = {
   expectedResult: number;
 };
 
-// TODO: implement tokens balance
 export async function playChart(userId: string, data: FormData) {
   try {
-    console.log({ userId, data });
     const session = await auth();
 
     if (!session?.user || session?.user.id !== userId) {
@@ -30,6 +30,13 @@ export async function playChart(userId: string, data: FormData) {
     const { chartId, amount, auctionType, expectedResult } =
       auctionSchema.parse(data);
     const date = moment().tz(TIMEZONE).startOf("day").toDate();
+
+    await updateUserPoints(
+      userId,
+      userId,
+      amount,
+      PointTransactionType.GAMEPLAY,
+    );
 
     await prisma.auction.create({
       data: {
@@ -45,7 +52,6 @@ export async function playChart(userId: string, data: FormData) {
     revalidatePath(`/charts/${chartId}/play`);
     return { status: "success", message: "Successfully saved" };
   } catch (error) {
-    console.log(error);
-    return { status: "error", message: error.message };
+    return { status: "error", message: error.toString() };
   }
 }

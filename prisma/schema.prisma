@@ -37,6 +37,7 @@ enum AuctionType {
 
 enum PointTransactionType {
   DEPOSIT
+  GAMEPLAY
   WITHDRAW
 }
 
@@ -179,10 +180,11 @@ model Point {
 }
 
 model PointHistory {
-  id                     String @id @default(cuid())
-  previousPoints         Int
-  afterTransactionPoints Int
-  points                 Int
+  id              String               @id @default(cuid())
+  previousPoints  Int
+  newPoints       Int
+  points          Int
+  transactionType PointTransactionType
 
   userId     String
   approverId String
