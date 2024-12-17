@@ -13,6 +13,37 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.ADMIN,
       },
       {
+        href: "/admin/managers",
+        icon: "manager",
+        title: "Managers",
+        authorizeOnly: UserRole.ADMIN,
+      },
+      {
+        href: "/admin/users",
+        icon: "users",
+        title: "Users",
+        authorizeOnly: UserRole.ADMIN,
+      },
+      {
+        href: "/admin/games",
+        icon: "game",
+        title: "Games",
+        authorizeOnly: UserRole.ADMIN,
+      },
+      {
+        href: "/admin/charts",
+        icon: "lineChart",
+        title: "Charts",
+        authorizeOnly: UserRole.ADMIN,
+      },
+      {
+        href: "/admin/points`",
+        icon: "points",
+        title: "Points",
+        authorizeOnly: UserRole.ADMIN,
+      },
+
+      {
         href: "/manager",
         icon: "laptop",
         title: "Manager Panel",
@@ -24,13 +55,6 @@ export const sidebarLinks: SidebarNavItem[] = [
         title: "Users",
         authorizeOnly: UserRole.MANAGER,
       },
-      { href: "/dashboard", icon: "dashboard", title: "Dashboard" },
-      // {
-      //   href: "/dashboard/billing",
-      //   icon: "billing",
-      //   title: "Billing",
-      //   authorizeOnly: UserRole.USER,
-      // },
       {
         href: "/charts",
         icon: "lineChart",
@@ -48,25 +72,6 @@ export const sidebarLinks: SidebarNavItem[] = [
         icon: "points",
         title: "Points",
         authorizeOnly: UserRole.USER,
-      },
-      {
-        href: "/admin/managers",
-        icon: "manager",
-        title: "Managers",
-        authorizeOnly: UserRole.ADMIN,
-      },
-      {
-        href: "/admin/games",
-        icon: "game",
-        title: "Games",
-        authorizeOnly: UserRole.ADMIN,
-      },
-      {
-        href: "/admin/users",
-        icon: "users",
-        title: "Users",
-        // badge: 2,
-        authorizeOnly: UserRole.ADMIN,
       },
       // {
       //   href: "#/dashboard/posts",

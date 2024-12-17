@@ -35,6 +35,7 @@ export const getUsersByRole = async (role: UserRole) => {
         name: true,
         email: true,
         role: true,
+        manager: true,
       },
     });
 

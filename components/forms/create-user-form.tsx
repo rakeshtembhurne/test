@@ -1,38 +1,53 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createUser } from "@/actions/users";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserRole } from "@prisma/client";
+import { User, UserRole } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
 import { CreateUserSchema } from "@/lib/validations/user";
+
 interface CreateUserFormProps {
-  hideRole?: boolean;  // This prop controls whether the Role dropdown is visible
+  managers: User[];
+  onlyRole?: UserRole;
+  redirectUrl: string;
 }
-export const CreateUserForm = ({ hideRole = false }: CreateUserFormProps) => {
+export const CreateUserForm = ({
+  managers = [],
+  onlyRole,
+  redirectUrl,
+}: CreateUserFormProps) => {
+  const router = useRouter();
   const [isPending, setIsPending] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
+      managerId: null,
       name: "",
       email: "",
       password: "",
-      role: UserRole.USER,
+      role: onlyRole || UserRole.USER,
     },
   });
 
+  console.log({ errors: form.formState.errors });
+
   const onSubmit = async (values: z.infer<typeof CreateUserSchema>) => {
+    console.log("OnSubmit called");
     setIsPending(true);
     try {
+      console.log("Submitting", { values });
       const result = await createUser(values);
 
       if (result.success) {
         toast.success(result.success);
         form.reset();
+        router.push(redirectUrl);
       }
 
       if (result.error) {
@@ -94,7 +109,32 @@ export const CreateUserForm = ({ hideRole = false }: CreateUserFormProps) => {
           )}
         </div>
 
-        {!hideRole && (
+        {onlyRole && onlyRole === UserRole.USER ? (
+          <div>
+            <label htmlFor="role" className="block text-sm font-medium">
+              Manager
+            </label>
+            <select
+              {...form.register("managerId")}
+              className="mt-1 block w-full rounded-md border p-2"
+            >
+              {managers.map((manager) => (
+                <option key={manager.id} value={manager.id}>
+                  {manager.name}
+                </option>
+              ))}
+            </select>
+            {form.formState.errors.managerId && (
+              <p className="text-sm text-red-500">
+                {form.formState.errors.managerId.message}
+              </p>
+            )}
+          </div>
+        ) : null}
+
+        {onlyRole ? (
+          <input type="hidden" name="role" value={onlyRole} />
+        ) : (
           <div>
             <label htmlFor="role" className="block text-sm font-medium">
               Role
@@ -103,8 +143,10 @@ export const CreateUserForm = ({ hideRole = false }: CreateUserFormProps) => {
               {...form.register("role")}
               className="mt-1 block w-full rounded-md border p-2"
             >
-              <option value={UserRole.USER}>User</option>
-              <option value={UserRole.MANAGER}>Manager</option>
+              <>
+                <option value={UserRole.USER}>User</option>
+                <option value={UserRole.MANAGER}>Manager</option>
+              </>
             </select>
             {form.formState.errors.role && (
               <p className="text-sm text-red-500">
@@ -113,7 +155,6 @@ export const CreateUserForm = ({ hideRole = false }: CreateUserFormProps) => {
             )}
           </div>
         )}
-
       </div>
 
       <button
@@ -121,7 +162,7 @@ export const CreateUserForm = ({ hideRole = false }: CreateUserFormProps) => {
         disabled={isPending}
         className="w-full rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
       >
-        {isPending ? "Creating..." : "Create User"}
+        {isPending ? "Submitting..." : "Submit"}
       </button>
     </form>
   );

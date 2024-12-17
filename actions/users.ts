@@ -15,7 +15,7 @@ export async function createUser(values: z.infer<typeof CreateUserSchema>) {
       return { error: "Invalid fields!" };
     }
 
-    const { email, password, name, role } = validatedFields.data;
+    const { email, password, name, role, managerId } = validatedFields.data;
 
     // Check if email already exists
     const existingUser = await getUserByEmail(email);
@@ -33,6 +33,7 @@ export async function createUser(values: z.infer<typeof CreateUserSchema>) {
         email,
         password: hashedPassword,
         role,
+        managerId,
       },
     });
 

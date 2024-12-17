@@ -33,27 +33,21 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "role",
     header: "User Role",
   },
-  // {
-  //   id: "actions",
-  //   cell: ({ row }) => {
-  //     const _row = row.original;
-  //     return (
-  //       <DropdownMenu>
-  //         <DropdownMenuTrigger asChild>
-  //           <Button variant="ghost" className="size-8 p-0">
-  //             <span className="sr-only">Open menu</span>
-  //             <MoreHorizontal className="size-4" />
-  //           </Button>
-  //         </DropdownMenuTrigger>
-  //         <DropdownMenuContent align="end">
-  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-  //           <DropdownMenuItem>
-  //             <Icons.pencil className="mr-2 size-4" />
-  //             <Link href={`/dashboard/banks/${_row?.id}/edit`}>Edit</Link>
-  //           </DropdownMenuItem>
-  //         </DropdownMenuContent>
-  //       </DropdownMenu>
-  //     );
-  //   },
-  // },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const _row = row.original;
+      return (
+        <div className="space-x-2">
+          <Button variant="info" size="sm">
+            <Icons.pencil className="mx-1 size-4" />
+          </Button>
+          <Button variant="destructive" size="sm">
+            <Icons.trash className="mx-1 size-4" />
+          </Button>
+        </div>
+      );
+    },
+  },
 ];

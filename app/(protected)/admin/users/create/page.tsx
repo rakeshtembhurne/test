@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { UserRole } from "@prisma/client";
 
 import { getCurrentUser } from "@/lib/session";
+import { getUsersByRole } from "@/lib/user";
 import { constructMetadata } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { DashboardHeader } from "@/components/dashboard/header";
@@ -15,17 +16,19 @@ export const metadata = constructMetadata(meta);
 
 export default async function SettingsPage() {
   const user = await getCurrentUser();
-  console.log({ user, UserRole });
 
-  if (user?.role !== UserRole.MANAGER) redirect("/login");
+  if (user?.role !== UserRole.ADMIN) redirect("/login");
+
+  const managers = await getUsersByRole(UserRole.MANAGER);
 
   return (
     <>
       <DashboardHeader heading={meta.title} text={meta.description} />
       <Card className="p-4">
         <CreateUserForm
-          onlyRole={UserRole.MANAGER}
-          redirectUrl="/manager/users"
+          managers={managers}
+          onlyRole={UserRole.USER}
+          redirectUrl="/admin/users"
         />
       </Card>
     </>
