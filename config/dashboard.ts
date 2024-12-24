@@ -37,9 +37,9 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.ADMIN,
       },
       {
-        href: "/admin/points`",
-        icon: "points",
-        title: "Points",
+        href: "/charts",
+        icon: "lineChart",
+        title: "Public Charts",
         authorizeOnly: UserRole.ADMIN,
       },
 
@@ -55,6 +55,13 @@ export const sidebarLinks: SidebarNavItem[] = [
         title: "Users",
         authorizeOnly: UserRole.MANAGER,
       },
+      {
+        href: "/charts",
+        icon: "lineChart",
+        title: "Public Charts",
+        authorizeOnly: UserRole.MANAGER,
+      },
+
       {
         href: "/charts",
         icon: "lineChart",

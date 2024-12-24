@@ -92,7 +92,7 @@ model User {
 
   accounts         Account[]
   sessions         Session[]
-  points           Point[]
+  points           Point?
   pointHistories   PointHistory[] @relation(name: "UserPointHistory")
   pointApprovers   PointHistory[] @relation(name: "UserPointApprover")
   auctionPlayers   Auction[]      @relation(name: "UserAuctionPlayer")
@@ -116,17 +116,16 @@ model VerificationToken {
 }
 
 model Chart {
-  id            String  @id @default(cuid())
-  title         String  @unique
+  id            String    @id @default(cuid())
+  title         String    @unique
   score         String
   jodiChartUrl  String?
   panelChartUrl String?
-  startTime     String?
-  endTime       String?
-
-  createdAt DateTime  @default(now()) @map(name: "created_at")
-  updatedAt DateTime  @default(now()) @map(name: "updated_at")
-  Auction   Auction[]
+  startTime     DateTime? @db.Time
+  endTime       DateTime? @db.Time
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  Auction       Auction[]
 
   @@map(name: "charts")
 }
@@ -174,7 +173,7 @@ model Point {
   id            String @id @default(cuid())
   currentPoints Int    @default(0)
 
-  userId String
+  userId String @unique
   user   User   @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now()) @map(name: "created_at")

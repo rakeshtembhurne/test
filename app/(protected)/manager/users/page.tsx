@@ -31,10 +31,7 @@ export default async function UsersByRole() {
 
   return (
     <DashboardShell>
-      <DashboardHeader
-        heading={metaOpts.title}
-        text={metaOpts.description}
-      >
+      <DashboardHeader heading={metaOpts.title} text={metaOpts.description}>
         <Button variant="default">
           <a href="/manager/users/create">Add New User</a>
         </Button>

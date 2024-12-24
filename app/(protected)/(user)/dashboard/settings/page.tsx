@@ -9,7 +9,7 @@ import { UserNameForm } from "@/components/forms/user-name-form";
 import { UserRoleForm } from "@/components/forms/user-role-form";
 
 export const metadata = constructMetadata({
-  title: "Settings – SaaS Starter",
+  title: "Settings",
   description: "Configure your account and website settings.",
 });
 
@@ -26,9 +26,12 @@ export default async function SettingsPage() {
       />
       <div className="divide-y divide-muted pb-10">
         <UserNameForm user={{ id: user.id, name: user.name || "" }} />
-        <UserRoleForm user={{ id: user.id, role: user.role }} />
-        <SyncChartsForm user={{ id: user.id, role: user.role }} />
-        <DeleteAccountSection />
+        {user.role === "ADMIN" ? (
+          <UserRoleForm user={{ id: user.id, role: user.role }} />
+        ) : null}
+        {user.role === "ADMIN" ? (
+          <SyncChartsForm user={{ id: user.id, role: user.role }} />
+        ) : null}
       </div>
     </>
   );

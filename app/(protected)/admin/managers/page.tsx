@@ -11,7 +11,7 @@ import { DataTable } from "@/components/data-table/data-table";
 import { columns, User } from "@/app/(protected)/admin/managers/column";
 
 const metaOpts = {
-  title: "Managers",
+  title: "All Managers",
   description: "All users with MANAGER role",
 };
 export const metadata = constructMetadata(metaOpts);

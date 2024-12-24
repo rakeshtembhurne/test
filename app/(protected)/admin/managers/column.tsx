@@ -46,6 +46,14 @@ export const columns: ColumnDef<User>[] = [
           <Button variant="destructive" size="sm">
             <Icons.trash className="mx-1 size-4" />
           </Button>
+          <Button variant="success" size="sm">
+            <Link
+              href={`/admin/managers/${_row?.id}/users`}
+              title="Manager users"
+            >
+              <Icons.users className="mx-1 size-4" />
+            </Link>
+          </Button>
         </div>
       );
     },

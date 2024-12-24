@@ -34,6 +34,11 @@ export async function createUser(values: z.infer<typeof CreateUserSchema>) {
         password: hashedPassword,
         role,
         managerId,
+        points: {
+          create: {
+            currentPoints: 0,
+          },
+        },
       },
     });
 

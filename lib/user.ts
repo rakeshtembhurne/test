@@ -2,6 +2,15 @@ import type { User, UserRole } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
 
+const userSelectFields = {
+  id: true,
+  name: true,
+  email: true,
+  role: true,
+  manager: { select: { name: true } },
+  points: { select: { currentPoints: true } },
+};
+
 export const getUserByEmail = async (email: string) => {
   try {
     const user = await prisma.user.findUnique({
@@ -30,12 +39,9 @@ export const getUsersByRole = async (role: UserRole) => {
       where: {
         role: role,
       },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        manager: true,
+      select: userSelectFields,
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
@@ -47,7 +53,10 @@ export const getUsersByRole = async (role: UserRole) => {
 
 export const getUserById = async (id: string) => {
   try {
-    const user = await prisma.user.findUnique({ where: { id } });
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: userSelectFields,
+    });
 
     return user;
   } catch {

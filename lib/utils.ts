@@ -216,8 +216,8 @@ type TimeStatus =
   | "invalid";
 
 export function getTimeStatus(
-  startTime: string | null,
-  endTime: string | null,
+  startTime: Date | null,
+  endTime: Date | null,
 ): TimeStatus {
   // If either startTime or endTime is null, return 'invalid'
   if (!startTime || !endTime) {
@@ -225,39 +225,11 @@ export function getTimeStatus(
   }
 
   const now = new Date();
-  const currentHours = now.getHours();
-  const currentMinutes = now.getMinutes();
 
-  // Helper function to convert time in "HH:MM" format to minutes since midnight
-  const timeToMinutes = (time: string): number => {
-    const [hours, minutes] = time.split(":").map(Number);
-    return hours * 60 + minutes;
-  };
-
-  // Convert start and end times to minutes
-  let startMinutes = timeToMinutes(startTime);
-  let endMinutes = timeToMinutes(endTime);
-
-  // If startMinutes is less than 480 (8 AM in minutes), assume it's PM
-  if (startMinutes < 480) {
-    startMinutes += 720; // Add 12 hours (720 minutes) to shift to PM
-  }
-
-  // If endMinutes is less than startMinutes, assume it crossed over into PM
-  if (endMinutes < startMinutes) {
-    endMinutes += 720; // Add 12 hours to the end time to account for PM
-  }
-
-  // Convert current time to minutes since midnight
-  const currentTimeMinutes = currentHours * 60 + currentMinutes;
-
-  // Determine the status based on current time
-  if (currentTimeMinutes < startMinutes) {
+  // Compare times directly
+  if (now < startTime) {
     return "yetToArrive";
-  } else if (
-    currentTimeMinutes >= startMinutes &&
-    currentTimeMinutes <= endMinutes
-  ) {
+  } else if (now >= startTime && now <= endTime) {
     return "currentlyInProgress";
   } else {
     return "alreadyPassed";
