@@ -31,6 +31,54 @@ export async function playChart(userId: string, data: FormData) {
       auctionSchema.parse(data);
     const date = moment().tz(TIMEZONE).startOf("day").toDate();
 
+    // Close before 15 minutes of the chart startTime
+    const chart = await prisma.chart.findUnique({
+      where: { id: chartId },
+      select: { id: true, startTime: true, endTime: true },
+    });
+    if (!chart) {
+      return {
+        status: "error",
+        message: "Chart not found",
+      };
+    }
+    // Adjust startTime and endTime for today's date
+    const today = new Date();
+    const startTime = new Date(
+      today.setHours(
+        chart?.startTime?.getHours() as number,
+        chart?.startTime?.getMinutes(),
+        0,
+        0,
+      ),
+    );
+    const endTime = new Date(
+      today.setHours(
+        chart?.endTime?.getHours() as number,
+        chart?.endTime?.getMinutes(),
+        0,
+        0,
+      ),
+    );
+
+    const currentTime = new Date();
+    const targetTime = auctionType.includes("OPEN") ? startTime : endTime;
+    targetTime.setMinutes(targetTime.getMinutes() - 15);
+
+    // const currentTimeFormatted = moment(currentTime).format("hh:mm A"); // AM/PM format
+    // const targetTimeFormatted = moment(targetTime).format("hh:mm A"); // AM/PM format
+    // console.log(
+    //   `Current Time: ${currentTimeFormatted}, Target Time: ${targetTimeFormatted}, Time Difference: ${targetTime - currentTime} ms`,
+    // );
+
+    // Check if the current time is before T minus 15 minutes of start or end time
+    if (currentTime > targetTime) {
+      return {
+        status: "error",
+        message: "Time is before 15 minutes of the chart start/end time",
+      };
+    }
+
     await updateUserPoints(
       userId,
       userId,

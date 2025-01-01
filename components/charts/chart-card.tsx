@@ -13,7 +13,8 @@ export default function ChartCard({ chart, color }) {
     <Card className={`border-2 text-center hover:border-2 ${typeClass}`}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="mx-auto text-center text-sm font-medium">
-          {chart.startTime} - {chart.endTime}
+          {chart.startTime.toLocaleTimeString()} -{" "}
+          {chart.endTime.toLocaleTimeString()}
         </CardTitle>
       </CardHeader>
       <CardContent>

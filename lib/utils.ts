@@ -219,45 +219,34 @@ export function getTimeStatus(
   startTime: string | null,
   endTime: string | null,
 ): TimeStatus {
-  // If either startTime or endTime is null, return 'invalid'
   if (!startTime || !endTime) {
+    return "invalid"; // Return invalid if either is null or empty
+  }
+
+  // Parse the ISO time strings into Date objects
+  const start = new Date(startTime);
+  const end = new Date(endTime);
+  const now = new Date();
+
+  // Check if parsed dates are valid
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) {
     return "invalid";
   }
 
-  const now = new Date();
-  const currentHours = now.getHours();
-  const currentMinutes = now.getMinutes();
+  // Normalize the year, month, and day of 'now' to match the 1970 reference
+  const normalizedNow = new Date(
+    1970, // Year
+    0, // Month (January)
+    1, // Day
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds(),
+  );
 
-  // Helper function to convert time in "HH:MM" format to minutes since midnight
-  const timeToMinutes = (time: string): number => {
-    const [hours, minutes] = time.split(":").map(Number);
-    return hours * 60 + minutes;
-  };
-
-  // Convert start and end times to minutes
-  let startMinutes = timeToMinutes(startTime);
-  let endMinutes = timeToMinutes(endTime);
-
-  // If startMinutes is less than 480 (8 AM in minutes), assume it's PM
-  if (startMinutes < 480) {
-    startMinutes += 720; // Add 12 hours (720 minutes) to shift to PM
-  }
-
-  // If endMinutes is less than startMinutes, assume it crossed over into PM
-  if (endMinutes < startMinutes) {
-    endMinutes += 720; // Add 12 hours to the end time to account for PM
-  }
-
-  // Convert current time to minutes since midnight
-  const currentTimeMinutes = currentHours * 60 + currentMinutes;
-
-  // Determine the status based on current time
-  if (currentTimeMinutes < startMinutes) {
+  // Compare the normalized 'now' with 'start' and 'end'
+  if (normalizedNow < start) {
     return "yetToArrive";
-  } else if (
-    currentTimeMinutes >= startMinutes &&
-    currentTimeMinutes <= endMinutes
-  ) {
+  } else if (normalizedNow >= start && normalizedNow <= end) {
     return "currentlyInProgress";
   } else {
     return "alreadyPassed";

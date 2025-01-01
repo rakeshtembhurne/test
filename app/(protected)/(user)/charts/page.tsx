@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 
-import { getCharts } from "@/lib/chart";
+import { getCharts, getPublicCharts } from "@/lib/chart";
 import { getCurrentUser } from "@/lib/session";
-import { constructMetadata, getTimeStatus, isTimeBetween } from "@/lib/utils";
+import { constructMetadata, getTimeStatus } from "@/lib/utils";
 import ChartCard from "@/components/charts/chart-card";
 import { DashboardHeader } from "@/components/dashboard/header";
 
@@ -13,10 +13,9 @@ export const metadata = constructMetadata({
 
 export default async function UserChartsPage() {
   const user = await getCurrentUser();
-  console.log({ user });
-  // if (!user || user.role !== "USER") redirect("/login");
+  if (!user) redirect("/login");
 
-  const charts = (await getCharts()) || [];
+  const charts = (await getPublicCharts()) || [];
   const chartsWithStatus = charts.map((chart) => {
     return {
       ...chart,

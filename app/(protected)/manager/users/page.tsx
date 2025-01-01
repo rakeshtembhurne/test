@@ -2,13 +2,13 @@ import { redirect } from "next/navigation";
 import { UserRole } from "@prisma/client";
 
 import { getCurrentUser } from "@/lib/session";
-import { getUsersByRole } from "@/lib/user";
+import { getUserByManagerId } from "@/lib/user";
 import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { DataTable } from "@/components/data-table/data-table";
-import { columns, User } from "@/app/(protected)/admin/users/column";
+import { columns, User } from "@/app/(protected)/manager/users/column";
 
 const metaOpts = {
   title: "Users",
@@ -16,8 +16,8 @@ const metaOpts = {
 };
 export const metadata = constructMetadata(metaOpts);
 
-async function getData(): Promise<User[]> {
-  return (await getUsersByRole(UserRole.USER)) || [];
+async function getData(userId: string): Promise<User[]> {
+  return (await getUserByManagerId(userId)) || [];
 }
 
 export default async function UsersByRole() {
@@ -25,16 +25,13 @@ export default async function UsersByRole() {
 
   if (!user?.id) redirect("/login");
 
-  const data = (await getData()) || [];
+  const data = (await getData(user?.id)) || [];
 
   console.log({ data });
 
   return (
     <DashboardShell>
-      <DashboardHeader
-        heading={metaOpts.title}
-        text={metaOpts.description}
-      >
+      <DashboardHeader heading={metaOpts.title} text={metaOpts.description}>
         <Button variant="default">
           <a href="/manager/users/create">Add New User</a>
         </Button>

@@ -18,24 +18,24 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Icons } from "@/components/shared/icons";
 
-export type User = Prisma.Args<typeof prisma.user, "create">["data"];
+export type Chart = Prisma.Args<typeof prisma.chart, "create">["data"];
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<Chart>[] = [
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "title",
+    header: "Title",
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "startTime",
+    header: "Start Time",
   },
   {
-    accessorKey: "manager.name",
-    header: "Manager",
+    accessorKey: "endTime",
+    header: "End Time",
   },
   {
-    accessorKey: "points.currentPoints",
-    header: "Points",
+    accessorKey: "score",
+    header: "Today's Score",
   },
 
   {
@@ -50,11 +50,6 @@ export const columns: ColumnDef<User>[] = [
           </Button>
           <Button variant="destructive" size="sm">
             <Icons.trash className="mx-1 size-4" />
-          </Button>
-          <Button variant="success" size="sm">
-            <Link href={`/admin/users/${_row?.id}/points`} title="User Points">
-              <Icons.points className="mx-1 size-4" />
-            </Link>
           </Button>
         </div>
       );

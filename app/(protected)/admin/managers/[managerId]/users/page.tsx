@@ -11,8 +11,8 @@ import { DataTable } from "@/components/data-table/data-table";
 import { columns, User } from "@/app/(protected)/admin/users/column";
 
 const metaOpts = {
-  title: "All Users",
-  description: "All users with USER role",
+  title: "Manager Users",
+  description: "Manager users with USER role",
 };
 export const metadata = constructMetadata(metaOpts);
 
@@ -20,13 +20,12 @@ async function getData(): Promise<User[]> {
   return (await getUsersByRole(UserRole.USER)) || [];
 }
 
-export default async function UsersByRole() {
+export default async function ManagerUsers() {
   const user = await getCurrentUser();
 
   if (!user?.id) redirect("/login");
 
   const data = (await getData()) || [];
-  console.log(data[0]);
 
   return (
     <DashboardShell>

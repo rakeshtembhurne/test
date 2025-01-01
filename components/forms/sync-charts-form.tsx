@@ -14,7 +14,7 @@ import { SectionColumns } from "@/components/dashboard/section-columns";
 import { Icons } from "@/components/shared/icons";
 
 interface UserNameFormProps {
-  user: Pick<User, "id" | "name" | "role">;
+  user: Pick<User, "id" | "role">;
 }
 
 export function SyncChartsForm({ user }: UserNameFormProps) {
@@ -32,15 +32,15 @@ export function SyncChartsForm({ user }: UserNameFormProps) {
 
   const onSubmit = handleSubmit((data) => {
     startTransition(async () => {
-      const { status } = await updateUserNameWithId(data);
+      const { status, message } = await updateUserNameWithId(data);
 
       if (status !== "success") {
         toast.error("Something went wrong.", {
-          description: "Your name was not updated. Please try again.",
+          description: message || "Unable sync at this time.",
         });
       } else {
         await update();
-        toast.success("Your name has been updated.");
+        toast.success("Charts has been synced.");
       }
     });
   });
@@ -64,13 +64,6 @@ export function SyncChartsForm({ user }: UserNameFormProps) {
               <p>Sync Charts</p>
             )}
           </Button>
-        </div>
-        <div className="flex flex-col justify-between p-1">
-          {errors?.name && (
-            <p className="pb-0.5 text-[13px] text-red-600">
-              {errors.name.message}
-            </p>
-          )}
         </div>
       </SectionColumns>
     </form>

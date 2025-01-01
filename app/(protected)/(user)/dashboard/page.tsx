@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -11,6 +13,15 @@ export const metadata = constructMetadata({
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
+  if (!user?.id) {
+    redirect("/login");
+  } else if (user.role === "ADMIN") {
+    redirect("/admin");
+  } else if (user.role === "MANAGER") {
+    redirect("/manager");
+  } else if (user.role === "USER") {
+    redirect("/charts");
+  }
 
   return (
     <>

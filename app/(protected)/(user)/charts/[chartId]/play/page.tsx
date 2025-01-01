@@ -21,7 +21,7 @@ export default async function SettingsPage({
 }) {
   const user = await getCurrentUser();
 
-  if (!user?.id) redirect("/login");
+  if (!user?.id || user.role !== "USER") redirect("/login");
   const chartId = params.chartId;
   const chart = await getChartById(chartId);
 

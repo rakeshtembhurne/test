@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { DataTable } from "@/components/data-table/data-table";
-import { columns, User } from "@/app/(protected)/admin/users/column";
+import { columns, User } from "@/app/(protected)/admin/managers/column";
 
 const metaOpts = {
-  title: "Managers",
+  title: "All Managers",
   description: "All users with MANAGER role",
 };
 export const metadata = constructMetadata(metaOpts);
@@ -21,18 +21,16 @@ async function getData(): Promise<User[]> {
 }
 
 export default async function UsersByRole() {
-  // const user = await getCurrentUser();
+  const user = await getCurrentUser();
 
-  // if (!user?.id) redirect("/login");
+  if (!user?.id) redirect("/login");
 
   const data = (await getData()) || [];
-
-  console.log({ data });
 
   return (
     <DashboardShell>
       <DashboardHeader heading={metaOpts.title} text={metaOpts.description}>
-        <Button variant="default">
+        <Button variant="info">
           <a href="/admin/managers/create">Add New Manager</a>
         </Button>
       </DashboardHeader>

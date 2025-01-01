@@ -22,7 +22,11 @@ export default async function SettingsPage() {
     <>
       <DashboardHeader heading={meta.title} text={meta.description} />
       <Card className="p-4">
-        <CreateUserForm hideRole={true} />
+        <CreateUserForm
+          managerId={user.id}
+          onlyRole={UserRole.MANAGER}
+          redirectUrl="/manager/users"
+        />
       </Card>
     </>
   );
