@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { UserRole } from "@prisma/client";
 
-import { getCharts } from "@/lib/chart";
+import { getPublicCharts } from "@/lib/chart";
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ function formatTime(date: Date): string {
 }
 
 async function getData() {
-  const charts = ((await getCharts()) || []).map((chart) => {
+  const charts = ((await getPublicCharts()) || []).map((chart) => {
     const startTime = chart.startTime
       ? formatTime(new Date(chart.startTime))
       : null;

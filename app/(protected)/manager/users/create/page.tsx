@@ -15,7 +15,6 @@ export const metadata = constructMetadata(meta);
 
 export default async function SettingsPage() {
   const user = await getCurrentUser();
-  console.log({ user, UserRole });
 
   if (user?.role !== UserRole.MANAGER) redirect("/login");
 
@@ -24,6 +23,7 @@ export default async function SettingsPage() {
       <DashboardHeader heading={meta.title} text={meta.description} />
       <Card className="p-4">
         <CreateUserForm
+          managerId={user.id}
           onlyRole={UserRole.MANAGER}
           redirectUrl="/manager/users"
         />

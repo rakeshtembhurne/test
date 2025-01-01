@@ -74,16 +74,47 @@ export async function syncChartsData(userId: string, data: FormData) {
     }
 
     const charts: Prisma.ChartCreateManyInput[] = await getChartsData();
-    const dataToSave: Prisma.ChartCreateManyInput[] = charts.filter(
-      (chart) => !!chart.title,
+    const existingCharts = (
+      (await prisma.chart.findMany({
+        select: { id: true, title: true },
+      })) || []
+    ).map((chart) => chart.title);
+    const chartsToCreate: Prisma.ChartCreateManyInput[] = charts.filter(
+      (chart) => !!chart.title && !existingCharts.includes(chart.title),
     );
-    await prisma.chart.createMany({
-      data: dataToSave,
-      skipDuplicates: true,
+
+    if (chartsToCreate.length > 0) {
+      await prisma.chart.createMany({
+        data: chartsToCreate,
+        skipDuplicates: true,
+      });
+    }
+    // Pull all charts again to ensure completeness
+    const updatedCharts = await prisma.chart.findMany({
+      select: { title: true },
     });
 
-    const existingCharts = await prisma.chart.findMany();
-    for await (const chart of existingCharts) {
+    // Prepare a map for efficient lookups
+    const scoreUpdates = charts.reduce(
+      (acc, chart) => {
+        acc[chart.title] = chart.score;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
+
+    // Batch update scores
+    await prisma.$transaction(
+      updatedCharts.map((chart) =>
+        prisma.chart.update({
+          where: { title: chart.title },
+          data: { score: scoreUpdates[chart.title] },
+        }),
+      ),
+    );
+
+    const allCharts = await prisma.chart.findMany();
+    for await (const chart of allCharts) {
       await getChartResults(chart);
     }
 
@@ -108,7 +139,7 @@ async function getChartsData() {
   const response = await fetch("https://sattamatkachart.in/");
   const htmlString = await response.text();
   const $ = cheerio.load(htmlString);
-  $(".news-body .fix").each((_i, el) => {
+  $(".news-body .fix, .news-body .news2").each((_i, el) => {
     const $this = $(el);
     const chart: Chart = {} as Chart;
     chart.title = $this.find("span").first().text();

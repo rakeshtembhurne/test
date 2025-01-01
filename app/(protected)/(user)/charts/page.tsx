@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { getCharts } from "@/lib/chart";
+import { getCharts, getPublicCharts } from "@/lib/chart";
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata, getTimeStatus } from "@/lib/utils";
 import ChartCard from "@/components/charts/chart-card";
@@ -15,7 +15,7 @@ export default async function UserChartsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const charts = (await getCharts()) || [];
+  const charts = (await getPublicCharts()) || [];
   const chartsWithStatus = charts.map((chart) => {
     return {
       ...chart,

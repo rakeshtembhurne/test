@@ -12,11 +12,13 @@ import * as z from "zod";
 import { CreateUserSchema } from "@/lib/validations/user";
 
 interface CreateUserFormProps {
-  managers: User[];
+  managerId?: string;
+  managers?: User[];
   onlyRole?: UserRole;
   redirectUrl: string;
 }
 export const CreateUserForm = ({
+  managerId,
   managers = [],
   onlyRole,
   redirectUrl,
@@ -27,7 +29,7 @@ export const CreateUserForm = ({
   const form = useForm({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
-      managerId: null,
+      managerId: managerId || null,
       name: "",
       email: "",
       password: "",
@@ -38,10 +40,8 @@ export const CreateUserForm = ({
   console.log({ errors: form.formState.errors });
 
   const onSubmit = async (values: z.infer<typeof CreateUserSchema>) => {
-    console.log("OnSubmit called");
     setIsPending(true);
     try {
-      console.log("Submitting", { values });
       const result = await createUser(values);
 
       if (result.success) {
@@ -130,6 +130,10 @@ export const CreateUserForm = ({
               </p>
             )}
           </div>
+        ) : null}
+
+        {managerId ? (
+          <input type="hidden" {...form.register("managerId")} />
         ) : null}
 
         {onlyRole ? (

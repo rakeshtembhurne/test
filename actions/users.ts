@@ -9,7 +9,9 @@ import { CreateUserSchema } from "@/lib/validations/user";
 
 export async function createUser(values: z.infer<typeof CreateUserSchema>) {
   try {
+    console.log({ values });
     const validatedFields = CreateUserSchema.safeParse(values);
+    console.log({ data: validatedFields.data });
 
     if (!validatedFields.success) {
       return { error: "Invalid fields!" };

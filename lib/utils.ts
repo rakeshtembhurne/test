@@ -216,20 +216,37 @@ type TimeStatus =
   | "invalid";
 
 export function getTimeStatus(
-  startTime: Date | null,
-  endTime: Date | null,
+  startTime: string | null,
+  endTime: string | null,
 ): TimeStatus {
-  // If either startTime or endTime is null, return 'invalid'
   if (!startTime || !endTime) {
+    return "invalid"; // Return invalid if either is null or empty
+  }
+
+  // Parse the ISO time strings into Date objects
+  const start = new Date(startTime);
+  const end = new Date(endTime);
+  const now = new Date();
+
+  // Check if parsed dates are valid
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) {
     return "invalid";
   }
 
-  const now = new Date();
+  // Normalize the year, month, and day of 'now' to match the 1970 reference
+  const normalizedNow = new Date(
+    1970, // Year
+    0, // Month (January)
+    1, // Day
+    now.getHours(),
+    now.getMinutes(),
+    now.getSeconds(),
+  );
 
-  // Compare times directly
-  if (now < startTime) {
+  // Compare the normalized 'now' with 'start' and 'end'
+  if (normalizedNow < start) {
     return "yetToArrive";
-  } else if (now >= startTime && now <= endTime) {
+  } else if (normalizedNow >= start && normalizedNow <= end) {
     return "currentlyInProgress";
   } else {
     return "alreadyPassed";

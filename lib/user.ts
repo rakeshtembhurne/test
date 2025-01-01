@@ -51,6 +51,24 @@ export const getUsersByRole = async (role: UserRole) => {
   }
 };
 
+export const getUserByManagerId = async (managerId: string) => {
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        managerId,
+      },
+      select: userSelectFields,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return users;
+  } catch {
+    return null;
+  }
+};
+
 export const getUserById = async (id: string) => {
   try {
     const user = await prisma.user.findUnique({

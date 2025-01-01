@@ -1,5 +1,6 @@
 import moment from "moment-timezone";
 
+import { activeCharts } from "@/config/chart";
 import { prisma } from "@/lib/db";
 
 export const getChartById = async (id: string) => {
@@ -15,6 +16,22 @@ export const getChartById = async (id: string) => {
 export const getCharts = async () => {
   try {
     const charts = await prisma.chart.findMany();
+    return charts;
+  } catch {
+    return null;
+  }
+};
+
+export const getPublicCharts = async () => {
+  try {
+    const charts = await prisma.chart.findMany({
+      where: {
+        title: {
+          in: activeCharts,
+          mode: "insensitive", // Ignore case
+        },
+      },
+    });
     return charts;
   } catch {
     return null;
