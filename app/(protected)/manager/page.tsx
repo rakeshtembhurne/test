@@ -7,31 +7,25 @@ import InfoCard from "@/components/dashboard/info-card";
 import TransactionsList from "@/components/dashboard/transactions-list";
 
 const metadataConf = {
-    title: "Manager Panel",
-    description: "All non-admin users",
+  title: "Manager Panel",
+  description: "All non-admin users",
 };
 export const metadata = constructMetadata(metadataConf);
 
 export default async function AdminPage() {
-    const user = await getCurrentUser();
-    if (!user || user.role !== "MANAGER") redirect("/login");
+  const user = await getCurrentUser();
+  if (!user || user.role !== "MANAGER") redirect("/login");
 
-    return (
-        <>
-            <DashboardHeader
-                heading={metadataConf.title}
-                text={metadataConf.description}
-            />
-            <div className="flex flex-col gap-5">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    <InfoCard />
-                    <InfoCard />
-                    <InfoCard />
-                    <InfoCard />
-                </div>
-                <TransactionsList />
-                <TransactionsList />
-            </div>
-        </>
-    );
+  return (
+    <>
+      <DashboardHeader
+        heading={metadataConf.title}
+        text={metadataConf.description}
+      />
+      <div className="flex flex-col gap-5">
+        {/* <TransactionsList /> */}
+        {/* <TransactionsList /> */}
+      </div>
+    </>
+  );
 }

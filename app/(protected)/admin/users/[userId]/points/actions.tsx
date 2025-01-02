@@ -76,7 +76,7 @@ const DataTableActions = ({ row }) => {
             size="sm"
             className="flex items-center gap-2"
           >
-            <Shield className="h-4 w-4" />
+            <Shield className="size-4" />
             Make Admin
           </Button>
         </AlertDialogTrigger>
@@ -95,7 +95,7 @@ const DataTableActions = ({ row }) => {
               disabled={isLoading}
               className="flex items-center gap-2"
             >
-              {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+              {isLoading && <Loader2 className="size-4 animate-spin" />}
               Confirm
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -110,7 +110,7 @@ const DataTableActions = ({ row }) => {
             size="sm"
             className="flex items-center gap-2"
           >
-            <Trash className="h-4 w-4" />
+            <Trash className="size-4" />
             Delete
           </Button>
         </AlertDialogTrigger>
@@ -129,7 +129,7 @@ const DataTableActions = ({ row }) => {
               disabled={isLoading}
               className="flex items-center gap-2"
             >
-              {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+              {isLoading && <Loader2 className="size-4 animate-spin" />}
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

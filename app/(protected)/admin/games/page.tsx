@@ -1,3 +1,5 @@
+import { Metadata } from "next";
+
 import { getAllAuctionStats, getAuctionStatsByDate } from "@/lib/auction";
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
@@ -5,16 +7,23 @@ import GameBoard from "@/components/dashboard/game-board";
 import { DashboardHeader } from "@/components/dashboard/header";
 import RedirectButton from "@/components/shared/redirect-button";
 
-export const metadata = constructMetadata({
-  title: "Dashboard – SaaS Starter",
+interface SearchParams {
+  type?: string;
+  date?: string;
+}
+
+export const metadata: Metadata = constructMetadata({
+  title: "Dashboard – SaaS Starter",
   description: "Create and manage content.",
 });
 
-export default async function DashboardPage({ searchParams }) {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
   const user = await getCurrentUser();
-
-  const type = searchParams?.type;
-  const date = searchParams?.date;
+  const { type, date } = await searchParams;
 
   const data = await getAllAuctionStats(type, date);
   const stats = await getAuctionStatsByDate(type, date);
@@ -26,7 +35,7 @@ export default async function DashboardPage({ searchParams }) {
         text={`Current Role : ${user?.role} — Change your role in settings.`}
       />
 
-      <div className="inline-flex gap-1 rounded-md shadow-sm" role="group">
+      <div className="my-4 inline-flex gap-1 rounded-md shadow-sm" role="group">
         <RedirectButton label="All Games" />
         <RedirectButton type="OPEN" label="OPEN" />
         <RedirectButton type="OPEN_SINGLE_PATTI" label="OPEN SINGLE PATTI" />

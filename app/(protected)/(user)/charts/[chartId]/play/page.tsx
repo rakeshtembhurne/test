@@ -17,12 +17,12 @@ export const metadata = constructMetadata({
 export default async function SettingsPage({
   params,
 }: {
-  params: { chartId: string };
+  params: Promise<{ chartId: string }>;
 }) {
   const user = await getCurrentUser();
 
   if (!user?.id || user.role !== "USER") redirect("/login");
-  const chartId = params.chartId;
+  const { chartId } = await params;
   const chart = await getChartById(chartId);
 
   return (

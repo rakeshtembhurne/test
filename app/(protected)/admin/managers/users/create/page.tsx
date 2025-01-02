@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { User, UserRole } from "@prisma/client";
+import { UserRole } from "@prisma/client";
 
 import { getCurrentUser } from "@/lib/session";
 import { getUsersByRole } from "@/lib/user";
@@ -19,7 +19,7 @@ export default async function SettingsPage() {
 
   if (user?.role !== UserRole.ADMIN) redirect("/login");
 
-  const managers = (await getUsersByRole(UserRole.MANAGER)) || [];
+  const managers = await getUsersByRole(UserRole.MANAGER);
 
   return (
     <>

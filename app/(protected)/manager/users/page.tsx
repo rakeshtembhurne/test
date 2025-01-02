@@ -16,7 +16,7 @@ const metaOpts = {
 };
 export const metadata = constructMetadata(metaOpts);
 
-async function getData(userId: string): Promise<User[]> {
+async function getData(userId: string) {
   return (await getUserByManagerId(userId)) || [];
 }
 

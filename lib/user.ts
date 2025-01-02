@@ -1,4 +1,4 @@
-import type { User, UserRole } from "@prisma/client";
+import type { Prisma, UserRole } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
 
@@ -6,6 +6,7 @@ const userSelectFields = {
   id: true,
   name: true,
   email: true,
+  image: true,
   role: true,
   manager: { select: { name: true } },
   points: { select: { currentPoints: true } },
@@ -33,7 +34,9 @@ export const getUserByEmail = async (email: string) => {
   }
 };
 
-export const getUsersByRole = async (role: UserRole) => {
+export const getUsersByRole = async (
+  role: UserRole,
+): Promise<Prisma.UserGetPayload<{ select: typeof userSelectFields }>[]> => {
   try {
     const users = await prisma.user.findMany({
       where: {
@@ -47,7 +50,7 @@ export const getUsersByRole = async (role: UserRole) => {
 
     return users;
   } catch {
-    return null;
+    return [];
   }
 };
 

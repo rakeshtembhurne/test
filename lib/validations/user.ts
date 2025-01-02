@@ -13,10 +13,7 @@ export const CreateUserSchema = z
   .object({
     name: z.string().min(1, "Name is required"),
     email: z.string().email("Invalid email address"),
-    password: z
-      .string()
-      .min(6, "Password must be at least 6 characters")
-      .optional(),
+    password: z.string().min(6, "Password must be at least 6 characters"),
     role: z.enum([UserRole.USER, UserRole.MANAGER], {
       required_error: "Role is required",
     }),

@@ -17,11 +17,11 @@ export const metadata = constructMetadata(meta);
 export default async function ChartDetailsPage({
   params,
 }: {
-  params: { chartId: string };
+  params: Promise<{ chartId: string }>;
 }) {
   // const user = await getCurrentUser();
   // if (!user || user.role !== "ADMIN") redirect("/login");
-  const chartId = params?.chartId;
+  const { chartId } = await params;
   const chart = await getChartById(chartId);
   const results = await getChartResults(chartId);
 

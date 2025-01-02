@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createUser } from "@/actions/users";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User, UserRole } from "@prisma/client";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -13,10 +13,12 @@ import { CreateUserSchema } from "@/lib/validations/user";
 
 interface CreateUserFormProps {
   managerId?: string;
-  managers?: User[];
+  managers?: [];
   onlyRole?: UserRole;
   redirectUrl: string;
 }
+type FormValues = z.infer<typeof CreateUserSchema>;
+
 export const CreateUserForm = ({
   managerId,
   managers = [],
@@ -39,7 +41,7 @@ export const CreateUserForm = ({
 
   console.log({ errors: form.formState.errors });
 
-  const onSubmit = async (values: z.infer<typeof CreateUserSchema>) => {
+  const onSubmit: SubmitHandler<FormValues> = async (values: FormValues) => {
     setIsPending(true);
     try {
       const result = await createUser(values);
@@ -137,7 +139,7 @@ export const CreateUserForm = ({
         ) : null}
 
         {onlyRole ? (
-          <input type="hidden" name="role" value={onlyRole} />
+          <input type="hidden" {...form.register("role")} value={onlyRole} />
         ) : (
           <div>
             <label htmlFor="role" className="block text-sm font-medium">

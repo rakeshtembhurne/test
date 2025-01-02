@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-// TODO: Use proper loads
+// FIXME: Use proper loads
 import { Loader2, Shield, Trash } from "lucide-react";
-import { toast } from "sonner";
 
 import {
   AlertDialog,
@@ -17,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 // TODO: Rename properly
-const AdmiUserActions = ({ row }) => {
+const DataTableActions = ({ row }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Function to handle making user an admin
@@ -36,10 +35,10 @@ const AdmiUserActions = ({ row }) => {
         throw new Error("Failed to update user role");
       }
 
-      toast.success("User role updated successfully");
+      // Handle success - you might want to refresh the table data here
     } catch (error) {
-      toast.error("Failed to update user role");
       console.error("Error updating user role:", error);
+      // Handle error - you might want to show a toast notification
     } finally {
       setIsLoading(false);
     }
@@ -49,7 +48,7 @@ const AdmiUserActions = ({ row }) => {
   const handleDelete = async () => {
     try {
       setIsLoading(true);
-      // TODO: Replace this with your actual API endpoint
+      // Replace this with your actual API endpoint
       const response = await fetch(`/api/users/${row.id}`, {
         method: "DELETE",
       });
@@ -58,10 +57,10 @@ const AdmiUserActions = ({ row }) => {
         throw new Error("Failed to delete user");
       }
 
-      toast.success("User deleted successfully");
+      // Handle success - you might want to refresh the table data here
     } catch (error) {
       console.error("Error deleting user:", error);
-      toast.error("Failed to delete user");
+      // Handle error - you might want to show a toast notification
     } finally {
       setIsLoading(false);
     }
@@ -73,11 +72,11 @@ const AdmiUserActions = ({ row }) => {
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button
-            variant="warning"
+            variant="outline"
             size="sm"
             className="flex items-center gap-2"
           >
-            <Shield className="size-4" />
+            <Shield className="h-4 w-4" />
             Make Admin
           </Button>
         </AlertDialogTrigger>
@@ -96,7 +95,7 @@ const AdmiUserActions = ({ row }) => {
               disabled={isLoading}
               className="flex items-center gap-2"
             >
-              {isLoading && <Loader2 className="size-4 animate-spin" />}
+              {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
               Confirm
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -111,7 +110,7 @@ const AdmiUserActions = ({ row }) => {
             size="sm"
             className="flex items-center gap-2"
           >
-            <Trash className="size-4" />
+            <Trash className="h-4 w-4" />
             Delete
           </Button>
         </AlertDialogTrigger>
@@ -130,7 +129,7 @@ const AdmiUserActions = ({ row }) => {
               disabled={isLoading}
               className="flex items-center gap-2"
             >
-              {isLoading && <Loader2 className="size-4 animate-spin" />}
+              {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -140,4 +139,4 @@ const AdmiUserActions = ({ row }) => {
   );
 };
 
-export default AdmiUserActions;
+export default DataTableActions;

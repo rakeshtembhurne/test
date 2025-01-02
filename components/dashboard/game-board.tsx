@@ -2,20 +2,35 @@ import React from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+interface RowData {
+  [key: string]: number | null; // Adjust types as needed based on your actual data
+}
+
+interface Data {
+  [rowId: string]: RowData;
+}
+
+interface AdminGameProps {
+  data: Data;
+  title?: string;
+  showColumnTotals?: boolean;
+  highlightEmptyCells?: boolean;
+}
+
 const AdminGame = ({
   data,
   title = "Game Board",
   showColumnTotals = true,
   highlightEmptyCells = true,
-}) => {
+}: AdminGameProps) => {
   // Generate column headers (0-9)
   const columns = Array.from({ length: 10 }, (_, i) => i.toString());
 
   // Calculate column totals
   const calculateColumnTotals = () => {
-    const totals = {};
+    const totals: { [key: string]: number } = {};
     columns.forEach((col) => {
-      const sum = Object.values(data).reduce((acc, row) => {
+      const sum = Object.values(data).reduce((acc, row: RowData) => {
         return acc + (row[col] || 0);
       }, 0);
       totals[col] = sum;

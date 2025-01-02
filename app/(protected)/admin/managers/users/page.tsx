@@ -26,6 +26,7 @@ export default async function UsersByRole() {
   if (!user?.id) redirect("/login");
 
   const data = (await getData()) || [];
+  console.log(data[0]);
 
   return (
     <DashboardShell>

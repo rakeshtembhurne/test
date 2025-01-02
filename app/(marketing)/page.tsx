@@ -10,13 +10,13 @@ import Testimonials from "@/components/sections/testimonials";
 export default function IndexPage() {
   return (
     <>
-      <HeroLanding />
-      <PreviewLanding />
-      <Powered />
-      <BentoGrid />
-      <InfoLanding data={infos[0]} reverse={true} />
+      {/* <HeroLanding /> */}
+      {/* <PreviewLanding /> */}
+      {/* <Powered /> */}
+      {/* <BentoGrid /> */}
+      {/* <InfoLanding data={infos[0]} reverse={true} /> */}
       {/* <InfoLanding data={infos[1]} /> */}
-      <Features />
+      {/* <Features /> */}
       <Testimonials />
     </>
   );

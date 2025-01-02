@@ -1,24 +1,34 @@
 import React from "react";
 
-import { generateSampleData } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const sampleData = generateSampleData(2, 3, 10, 1000);
+interface RowData {
+  [key: string]: number | null;
+}
+
+interface Data {
+  [rowId: string]: RowData;
+}
+
+interface AdminGameProps {
+  data: Data;
+  title?: string;
+  showColumnTotals?: boolean;
+  highlightEmptyCells?: boolean;
+}
 
 const AdminGame = ({
-  data = sampleData,
-  title = "Today's Collection",
+  data,
+  title = "Game Board",
   showColumnTotals = true,
   highlightEmptyCells = true,
-  minValue = 0,
-  maxValue = 1000,
-}) => {
+}: AdminGameProps) => {
   // Generate column headers (0-9)
   const columns = Array.from({ length: 10 }, (_, i) => i.toString());
 
   // Calculate column totals
   const calculateColumnTotals = () => {
-    const totals = {};
+    const totals: { [key: string]: number } = {};
     columns.forEach((col) => {
       const sum = Object.values(data).reduce((acc, row) => {
         return acc + (row[col] || 0);

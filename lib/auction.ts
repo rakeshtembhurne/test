@@ -1,4 +1,4 @@
-import Prisma from "@prisma/client";
+import { AuctionType, Prisma } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
 
@@ -29,8 +29,8 @@ export const getAllAuctionStats = async (type: string | null, date: string) => {
   try {
     const todayMidnight = new Date();
     todayMidnight.setHours(0, 0, 0, 0);
-    const whereCondition = {
-      ...(type ? { auctionType: type } : {}), // Add auctionType filter only if `type` is provided
+    const whereCondition: Prisma.AuctionWhereInput = {
+      ...(type ? { auctionType: type as AuctionType } : {}), // Add auctionType filter only if `type` is provided
       date: date ? new Date(date) : todayMidnight, // Default to today's date at midnight if `date` is not provided
     };
 
@@ -70,7 +70,7 @@ export const getAllAuctionStats = async (type: string | null, date: string) => {
 
     return result;
   } catch {
-    return null;
+    return {};
   }
 };
 
@@ -84,7 +84,7 @@ export const getAuctionStatsByDate = async (
     const whereCondition = {
       ...(type ? { auctionType: type } : {}), // Add auctionType filter only if `type` is provided
       date: date ? new Date(date) : todayMidnight, // Default to today's date at midnight if `date` is not provided
-    };
+    } as Prisma.AuctionWhereInput;
 
     const auctions = await prisma.auction.findMany({
       where: whereCondition,
@@ -125,6 +125,6 @@ export const getAuctionStatsByDate = async (
     return result;
   } catch (error) {
     console.error("Error fetching auction stats:", error);
-    return null;
+    return {};
   }
 };

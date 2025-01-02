@@ -10,8 +10,10 @@ import { buttonVariants } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { DashboardShell } from "@/components/dashboard/shell";
 import { DataTable } from "@/components/data-table/data-table";
-
-import { Auction, columns } from "./column";
+import {
+  Auction,
+  columns,
+} from "@/app/(protected)/admin/users/[userId]/points/column";
 
 const metaOpts = {
   title: "Points",
@@ -26,9 +28,9 @@ async function getData(userId: string): Promise<PointHistory[]> {
 export default async function AdminPointsPage({
   params,
 }: {
-  params: { userId: string };
+  params: Promise<{ userId: string }>;
 }) {
-  const userId = params?.userId;
+  const { userId } = await params;
   const [loggedInUser, user] = await Promise.all([
     getCurrentUser(),
     getUserById(userId),
@@ -36,7 +38,6 @@ export default async function AdminPointsPage({
 
   if (!loggedInUser?.id) redirect("/login");
   const points = await getUserPoints(userId);
-  console.log({ user, points });
 
   const data = (await getData(userId)).map((d) => {
     return {

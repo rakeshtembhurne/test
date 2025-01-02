@@ -20,9 +20,7 @@ export default {
     }),
     Credentials({
       async authorize(credentials) {
-        console.table({ credentials });
         const validatedFields = LoginSchema.safeParse(credentials);
-        console.log({ validatedFields });
         if (!validatedFields.success) {
           return null;
         }
@@ -30,7 +28,6 @@ export default {
         const { email, password } = validatedFields.data;
 
         const user = await getUserByEmail(email);
-        console.log({ user });
         if (!user || !user.password) return null;
 
         const passwordsMatch = await bcrypt.compare(password, user.password);

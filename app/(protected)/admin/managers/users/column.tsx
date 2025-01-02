@@ -52,10 +52,7 @@ export const columns: ColumnDef<User>[] = [
             <Icons.trash className="mx-1 size-4" />
           </Button>
           <Button variant="success" size="sm">
-            <Link
-              href={`/manager/users/points/${_row?.id}`}
-              title="User Points"
-            >
+            <Link href={`/admin/users/${_row?.id}/points`} title="User Points">
               <Icons.points className="mx-1 size-4" />
             </Link>
           </Button>
