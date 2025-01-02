@@ -9,13 +9,15 @@ import { CreateUserSchema } from "@/lib/validations/user";
 
 export async function createUser(values: z.infer<typeof CreateUserSchema>) {
   try {
+    console.log({ values });
     const validatedFields = CreateUserSchema.safeParse(values);
+    console.log({ data: validatedFields.data });
 
     if (!validatedFields.success) {
       return { error: "Invalid fields!" };
     }
 
-    const { email, password, name, role } = validatedFields.data;
+    const { email, password, name, role, managerId } = validatedFields.data;
 
     // Check if email already exists
     const existingUser = await getUserByEmail(email);
@@ -33,6 +35,12 @@ export async function createUser(values: z.infer<typeof CreateUserSchema>) {
         email,
         password: hashedPassword,
         role,
+        managerId,
+        points: {
+          create: {
+            currentPoints: 0,
+          },
+        },
       },
     });
 

@@ -11,8 +11,8 @@ import { DataTable } from "@/components/data-table/data-table";
 import { columns, User } from "@/app/(protected)/admin/users/column";
 
 const metaOpts = {
-  title: "Users",
-  description: "All non-admin users",
+  title: "All Users",
+  description: "All users with USER role",
 };
 export const metadata = constructMetadata(metaOpts);
 
@@ -27,14 +27,13 @@ export default async function UsersByRole() {
 
   const data = (await getData()) || [];
 
-  console.log({ data });
-
   return (
     <DashboardShell>
-      <DashboardHeader
-        heading={metaOpts.title}
-        text={metaOpts.description}
-      ></DashboardHeader>
+      <DashboardHeader heading={metaOpts.title} text={metaOpts.description}>
+        <Button variant="info">
+          <a href="/admin/users/create">Add New User</a>
+        </Button>
+      </DashboardHeader>
       <div className="overflow-auto rounded-[0.5rem] border bg-background shadow">
         <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">
           <DataTable columns={columns} data={data} />

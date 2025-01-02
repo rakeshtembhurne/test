@@ -120,10 +120,9 @@ export function NavBar({ scroll = false }: NavBarProps) {
               variant="default"
               size="sm"
               rounded="full"
-              onClick={() => setShowSignInModal(true)}
+              // onClick={() => setShowSignInModal(true)}
             >
-              <span>Sign In</span>
-              <Icons.arrowRight className="size-4" />
+              <Link href="/login">Sign In</Link>
             </Button>
           ) : (
             <Skeleton className="hidden h-9 w-28 rounded-full lg:flex" />

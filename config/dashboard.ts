@@ -12,29 +12,16 @@ export const sidebarLinks: SidebarNavItem[] = [
         title: "Admin Panel",
         authorizeOnly: UserRole.ADMIN,
       },
-      { href: "/dashboard", icon: "dashboard", title: "Dashboard" },
-      // {
-      //   href: "/dashboard/billing",
-      //   icon: "billing",
-      //   title: "Billing",
-      //   authorizeOnly: UserRole.USER,
-      // },
-      {
-        href: "/charts",
-        icon: "lineChart",
-        title: "Charts",
-        authorizeOnly: UserRole.USER,
-      },
-      {
-        href: "/games",
-        icon: "game",
-        title: "My Games",
-        authorizeOnly: UserRole.USER,
-      },
       {
         href: "/admin/managers",
         icon: "manager",
         title: "Managers",
+        authorizeOnly: UserRole.ADMIN,
+      },
+      {
+        href: "/admin/users",
+        icon: "users",
+        title: "Users",
         authorizeOnly: UserRole.ADMIN,
       },
       {
@@ -44,11 +31,54 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.ADMIN,
       },
       {
-        href: "/admin/users",
+        href: "/admin/charts",
+        icon: "lineChart",
+        title: "Charts",
+        authorizeOnly: UserRole.ADMIN,
+      },
+      {
+        href: "/charts",
+        icon: "lineChart",
+        title: "Public Charts",
+        authorizeOnly: UserRole.ADMIN,
+      },
+
+      {
+        href: "/manager",
+        icon: "laptop",
+        title: "Manager Panel",
+        authorizeOnly: UserRole.MANAGER,
+      },
+      {
+        href: "/manager/users",
         icon: "users",
         title: "Users",
-        // badge: 2,
-        authorizeOnly: UserRole.ADMIN,
+        authorizeOnly: UserRole.MANAGER,
+      },
+      {
+        href: "/charts",
+        icon: "lineChart",
+        title: "Public Charts",
+        authorizeOnly: UserRole.MANAGER,
+      },
+
+      {
+        href: "/charts",
+        icon: "lineChart",
+        title: "Charts",
+        authorizeOnly: UserRole.USER,
+      },
+      {
+        href: "/games",
+        icon: "game",
+        title: "Games",
+        authorizeOnly: UserRole.USER,
+      },
+      {
+        href: "/points",
+        icon: "points",
+        title: "Points",
+        authorizeOnly: UserRole.USER,
       },
       // {
       //   href: "#/dashboard/posts",

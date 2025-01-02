@@ -1,29 +1,47 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createUser } from "@/actions/users";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserRole } from "@prisma/client";
-import { useForm } from "react-hook-form";
+import { User, UserRole } from "@prisma/client";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
 import { CreateUserSchema } from "@/lib/validations/user";
 
-export const CreateUserForm = () => {
+interface CreateUserFormProps {
+  managerId?: string;
+  managers?: [];
+  onlyRole?: UserRole;
+  redirectUrl: string;
+}
+type FormValues = z.infer<typeof CreateUserSchema>;
+
+export const CreateUserForm = ({
+  managerId,
+  managers = [],
+  onlyRole,
+  redirectUrl,
+}: CreateUserFormProps) => {
+  const router = useRouter();
   const [isPending, setIsPending] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
+      managerId: managerId || null,
       name: "",
       email: "",
       password: "",
-      role: UserRole.USER,
+      role: onlyRole || UserRole.USER,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof CreateUserSchema>) => {
+  console.log({ errors: form.formState.errors });
+
+  const onSubmit: SubmitHandler<FormValues> = async (values: FormValues) => {
     setIsPending(true);
     try {
       const result = await createUser(values);
@@ -31,6 +49,7 @@ export const CreateUserForm = () => {
       if (result.success) {
         toast.success(result.success);
         form.reset();
+        router.push(redirectUrl);
       }
 
       if (result.error) {
@@ -92,23 +111,56 @@ export const CreateUserForm = () => {
           )}
         </div>
 
-        <div>
-          <label htmlFor="role" className="block text-sm font-medium">
-            Role
-          </label>
-          <select
-            {...form.register("role")}
-            className="mt-1 block w-full rounded-md border p-2"
-          >
-            <option value={UserRole.USER}>User</option>
-            <option value={UserRole.MANAGER}>Manager</option>
-          </select>
-          {form.formState.errors.role && (
-            <p className="text-sm text-red-500">
-              {form.formState.errors.role.message}
-            </p>
-          )}
-        </div>
+        {onlyRole && onlyRole === UserRole.USER ? (
+          <div>
+            <label htmlFor="role" className="block text-sm font-medium">
+              Manager
+            </label>
+            <select
+              {...form.register("managerId")}
+              className="mt-1 block w-full rounded-md border p-2"
+            >
+              {managers.map((manager) => (
+                <option key={manager.id} value={manager.id}>
+                  {manager.name}
+                </option>
+              ))}
+            </select>
+            {form.formState.errors.managerId && (
+              <p className="text-sm text-red-500">
+                {form.formState.errors.managerId.message}
+              </p>
+            )}
+          </div>
+        ) : null}
+
+        {managerId ? (
+          <input type="hidden" {...form.register("managerId")} />
+        ) : null}
+
+        {onlyRole ? (
+          <input type="hidden" {...form.register("role")} value={onlyRole} />
+        ) : (
+          <div>
+            <label htmlFor="role" className="block text-sm font-medium">
+              Role
+            </label>
+            <select
+              {...form.register("role")}
+              className="mt-1 block w-full rounded-md border p-2"
+            >
+              <>
+                <option value={UserRole.USER}>User</option>
+                <option value={UserRole.MANAGER}>Manager</option>
+              </>
+            </select>
+            {form.formState.errors.role && (
+              <p className="text-sm text-red-500">
+                {form.formState.errors.role.message}
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       <button
@@ -116,7 +168,7 @@ export const CreateUserForm = () => {
         disabled={isPending}
         className="w-full rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
       >
-        {isPending ? "Creating..." : "Create User"}
+        {isPending ? "Submitting..." : "Submit"}
       </button>
     </form>
   );

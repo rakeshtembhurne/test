@@ -43,7 +43,7 @@ export function DataTableFacetedFilter<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <Icons.circlePlus className="mr-2 size-4" />
+          <Icons.add className="mr-2 size-4" />
           {title}
           {selectedValues?.size > 0 && (
             <>
@@ -111,7 +111,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                           : "opacity-50 [&_svg]:invisible",
                       )}
                     >
-                      <Icons.circlePlus className={cn("size-4")} />
+                      <Icons.add className={cn("size-4")} />
                     </div>
                     {option.icon && (
                       <option.icon className="mr-2 size-4 text-muted-foreground" />

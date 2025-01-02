@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { playChart, type FormData } from "@/actions/play-chart";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AuctionType, User } from "@prisma/client";
-import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -21,7 +20,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SectionColumns } from "@/components/dashboard/section-columns";
 import { Icons } from "@/components/shared/icons";
@@ -40,7 +38,8 @@ export function PlayChartForm({ user, chartId }: UserNameFormProps) {
     defaultValues: {
       chartId: chartId,
       amount: 10,
-      auctionType: AuctionType.SINGLE,
+      auctionType: AuctionType.OPEN,
+      expectedResult: 0,
     },
   });
 
@@ -55,6 +54,7 @@ export function PlayChartForm({ user, chartId }: UserNameFormProps) {
       const { status, message } = await playUserChart(data);
 
       if (status !== "success") {
+        console.log({ errors });
         toast.error("Something went wrong.", {
           description: message || "The game could not be saved.",
         });
@@ -65,7 +65,7 @@ export function PlayChartForm({ user, chartId }: UserNameFormProps) {
     });
   });
 
-  console.log(JSON.stringify({ errors }));
+  // console.log(JSON.stringify({ errors }));
   return (
     <Form {...form}>
       <form onSubmit={onSubmit}>

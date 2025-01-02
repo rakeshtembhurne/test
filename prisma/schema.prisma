@@ -7,8 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum UserRole {
@@ -18,17 +19,26 @@ enum UserRole {
 }
 
 enum AuctionType {
-  SINGLE
-  JODI
-  PATTI
+  //SINGLE
+  //JODI
+  //PATTI
   OPEN
+  OPEN_SINGLE_PATTI
+  OPEN_DOUBLE_PATTI
+
   CLOSE
-  SINGLE_PATTI
-  DOUBLE_PATTI
-  TRIPLE_PATTI
-  CYCLE_PATTI
-  FARAK
-  BERIJ
+  CLOSE_SINGLE_PATTI
+  CLOSE_DOUBLE_PATTI
+  //TRIPLE_PATTI
+  //CYCLE_PATTI
+  //FARAK
+  //BERIJ
+}
+
+enum PointTransactionType {
+  DEPOSIT
+  GAMEPLAY
+  WITHDRAW
 }
 
 model Account {
@@ -76,10 +86,17 @@ model User {
   updatedAt     DateTime  @default(now()) @map(name: "updated_at")
   role          UserRole  @default(USER)
 
-  accounts  Account[]
-  sessions  Session[]
-  players   Auction[] @relation(name: "UserAuctionPlayer")
-  approvers Auction[] @relation(name: "UserAuctionApprover")
+  managerId    String?
+  manager      User?   @relation("ManagerToUser", fields: [managerId], references: [id])
+  subordinates User[]  @relation("ManagerToUser")
+
+  accounts         Account[]
+  sessions         Session[]
+  points           Point?
+  pointHistories   PointHistory[] @relation(name: "UserPointHistory")
+  pointApprovers   PointHistory[] @relation(name: "UserPointApprover")
+  auctionPlayers   Auction[]      @relation(name: "UserAuctionPlayer")
+  auctionApprovers Auction[]      @relation(name: "UserAuctionApprover")
 
   stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
   stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
@@ -99,17 +116,16 @@ model VerificationToken {
 }
 
 model Chart {
-  id            String  @id @default(cuid())
-  title         String  @unique
+  id            String    @id @default(cuid())
+  title         String    @unique
   score         String
   jodiChartUrl  String?
   panelChartUrl String?
-  startTime     String?
-  endTime       String?
-
-  createdAt DateTime  @default(now()) @map(name: "created_at")
-  updatedAt DateTime  @default(now()) @map(name: "updated_at")
-  Auction   Auction[]
+  startTime     DateTime? @db.Time
+  endTime       DateTime? @db.Time
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
+  Auction       Auction[]
 
   @@map(name: "charts")
 }
@@ -149,6 +165,37 @@ model Auction {
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
 
-  // @@unique([chartId, userId, date])
+  // @@unique([userId, chartId, auctionType, date])
   @@map(name: "auctions")
+}
+
+model Point {
+  id            String @id @default(cuid())
+  currentPoints Int    @default(0)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "points")
+}
+
+model PointHistory {
+  id              String               @id @default(cuid())
+  previousPoints  Int
+  newPoints       Int
+  points          Int
+  transactionType PointTransactionType
+
+  userId     String
+  approverId String
+  user       User   @relation(name: "UserPointHistory", fields: [userId], references: [id])
+  approver   User   @relation(name: "UserPointApprover", fields: [approverId], references: [id])
+
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+
+  @@map(name: "pointhistories")
 }
