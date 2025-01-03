@@ -8,11 +8,11 @@ SECRET_KEY="i-dont-know"                 # for the demo app
 NEXT_PUBLIC_SAFE_KEY="i-really-don-know" # for the demo app
 DOMAIN_NAME="nextselfhost.dev"           # replace with your own
 EMAIL="your-email@example.com"           # replace with your own
-AUTH_SECRET=""                           # Added by `npx auth`. Read more: https://cli.authjs.dev
+AUTH_SECRET=$(openssl rand -base64 32)   # Added by `npx auth`. Read more: https://cli.authjs.dev
 
 # Script Vars
 REPO_URL="https://github.com/leerob/next-self-host.git"
-APP_DIR=~/standup
+APP_DIR=/home/ubuntu/standup
 SWAP_SIZE="1G" # Swap size of 1GB
 
 # Update package list and upgrade existing packages
