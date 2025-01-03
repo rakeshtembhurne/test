@@ -82,6 +82,7 @@ echo "POSTGRES_USER=$POSTGRES_USER" >"$APP_DIR/.env"
 echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >>"$APP_DIR/.env"
 echo "POSTGRES_DB=$POSTGRES_DB" >>"$APP_DIR/.env"
 
+echo "NEXT_PUBLIC_APP_URL=https://$DOMAIN_NAME" >>"$APP_DIR/.env"
 echo "AUTH_SECRET=$AUTH_SECRET" >>"$APP_DIR/.env"
 echo "GOOGLE_CLIENT_ID=dummy" >>"$APP_DIR/.env"
 echo "GOOGLE_CLIENT_SECRET=dummy" >>"$APP_DIR/.env"
