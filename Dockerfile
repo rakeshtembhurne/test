@@ -3,7 +3,7 @@ FROM oven/bun:alpine AS base
 # Stage 1: Install dependencies
 FROM base AS deps
 WORKDIR /app
-COPY package.json package-lock.json bun.lockb prisma/ ./
+COPY package.json package-lock.json env.mjs bun.lockb prisma/ ./
 RUN ls -la
 RUN bun install --frozen-lockfile
 
@@ -21,11 +21,11 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 # Copy only the necessary build artifacts
-COPY --from=builder /app/.next ./app/.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/next.config.js ./next.config.js
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder --chown=$USER:$USER /app/.next ./app/.next
+COPY --from=builder --chown=$USER:$USER /app/public ./public
+COPY --from=builder --chown=$USER:$USER /app/node_modules ./node_modules
+COPY --from=builder --chown=$USER:$USER /app/next.config.js ./next.config.js
+COPY --from=builder --chown=$USER:$USER /app/package.json ./package.json
 
 EXPOSE 3000
 CMD ["bun", "start"]
