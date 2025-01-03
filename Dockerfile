@@ -34,4 +34,4 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
-CMD ["bun", "run", "server.js"]
+CMD ["bun", "run", "server.js", "--host", "0.0.0.0"]
