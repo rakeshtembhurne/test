@@ -4,3 +4,7 @@ scripts
 *Dockerfile*
 node_modules
 .env
+.dockerignore
+npm-debug.log
+README.md
+.next
