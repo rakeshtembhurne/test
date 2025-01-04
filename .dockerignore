@@ -1,0 +1,6 @@
+.results
+scripts
+*Dockerfile*
+node_modules
+.env
+README.md
